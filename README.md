@@ -83,7 +83,7 @@ License and Authors
 -------------------
 Author:: Rodolfo Castellanos: <rodolfojcj@yahoo.com>
 
-```text
+```
 Copyright:: 2014, OpenSinergia
 
 Licensed under the Apache License, Version 2.0 (the "License");
