@@ -1,0 +1,75 @@
+; Core version
+; ------------
+core = <%=node['drupalbaseplus']['CORE_VERSION']%>
+
+; API version
+; ------------
+api = 2
+
+; Core project
+; ------------
+projects[] = drupal
+
+; Misc
+; ----
+translations[] = es
+
+# TODO: refactor to dynamically specify projects
+# I think a structure of {name, version, yes_no_enabled?} for each project will work
+# drush make will install everything and in some later point, drush pm-enable
+# will enable the specified ones, resolving dependencies recursively.
+# Or I could be wrong. Maybe two data structures: one for projects to download via drush make
+# and other for the modules to enable trying to get all its dependencies recursively.
+; Projects
+; --------
+projects[] = views
+projects[] = ctools
+# ckeditor warning: how to upload images??
+projects[] = ckeditor
+# seems to work: imce + imce bridge wysiwyg + wysiwyg + tinymce 3.5
+# TODO alter database content to allow <img> tags in filtered/full html contents
+# sitemap
+# xmlsitemap
+# enable contact form module
+projects[] = draggableviews
+projects[] = features
+projects[] = entity
+projects[] = link
+projects[] = libraries
+projects[] = flexslider
+projects[] = galleria
+projects[] = strongarm
+projects[] = jquery_update
+projects[] = advanced_help
+projects[] = views_slideshow
+projects[] = field_redirection
+projects[] = flexslider_views_slideshow
+
+projects[drupaleasy_slideshow][download][type] = "git"
+projects[drupaleasy_slideshow][download][url] = "http://git.drupal.org/sandbox/ultimike/1822938.git"
+projects[drupaleasy_slideshow][type] = "module"
+
+; Libraries
+; ---------
+
+; for galleria modules
+libraries[galleria][download][type] = "file"
+libraries[galleria][download][url] = "http://galleria.io/static/galleria-1.3.5.zip"
+libraries[galleria][directory_name] = "galleria"
+libraries[galleria][type] = "library"
+
+; for flexslider modules
+libraries[flexslider][download][type] = "file"
+libraries[flexslider][download][url] = "http://github.com/woothemes/FlexSlider/archive/master.tar.gz"
+libraries[flexslider][directory_name] = "flexslider"
+libraries[flexslider][type] = "library"
+
+; for drupal easy slideshow or views slideshow??
+libraries[jquery.cycle][download][type] = "file"
+libraries[jquery.cycle][download][url] = "http://github.com/malsup/cycle/archive/master.tar.gz"
+libraries[jquery.cycle][directory_name] = "jquery.cycle"
+libraries[jquery.cycle][type] = "library"
+
+; Themes
+; ------
+;
