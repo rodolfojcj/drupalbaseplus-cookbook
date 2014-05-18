@@ -1,6 +1,5 @@
 drupalbaseplus Cookbook
 =======================
-
 This cookbook creates a working web site installation, based on Drupal CMS and using Drush behind the scenes to provide a functional site that includes the core of Drupal along with some projects/modules of common use.
 
 The main goal of this cookbook is to be a time server for web site developers based on Drupal, by providing a more than functional site via an automated way.
@@ -12,6 +11,8 @@ Requirements
 Anything than Drupal and Drush require to work is required by this cookbook. Basically this means a Linux based environment as well as the following.
 
 ## Packages to install
+The following packages are installed by this cookbook:
+
 - `php-gd` - required by Drupal
 - `php-cli` - needed by Drush
 - `composer` - needed by Drush
@@ -23,6 +24,7 @@ Anything than Drupal and Drush require to work is required by this cookbook. Bas
 
 ## Platforms
 This cookbook works on the following platforms:
+
 - Ubuntu 12.04
 
 Testing
