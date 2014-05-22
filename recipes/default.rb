@@ -19,6 +19,11 @@
 # limitations under the License.
 #
 
+chef_gem 'json'
+chef_gem 'deep_merge'
+
+::Chef::Resource::Template.send(:include, Drupal::Helper)
+
 ##
 # packages
 ##
@@ -94,11 +99,16 @@ end
 ##
 # put drush to work throuh drush make stuff!
 ##
-template '/tmp/drupalbaseplus.make' do
-  source 'drupalbaseplus.make.erb'
+template Chef::Config[:file_cache_path] + "/drupalbaseplus.make" do
+  source 'site.make.erb'
   owner 'root'
   group 'root'
   mode '0644'
+  plt_array = generate_plt(merge_json_to_hash(node['drupalbaseplus']['jsons_for_drush_make'][0], nil))
+  variables({
+    :core => node['drupalbaseplus']['core_version'],
+    :plt => plt_array
+  })
 end
 
 bash 'apply-drush-make' do
@@ -110,7 +120,7 @@ bash 'apply-drush-make' do
     if [ ! -d #{node['drupalbaseplus']['site_dir']} ]
     then
       export PATH=#{node['drupalbaseplus']['drush_base_dir']}:$PATH
-      drush make /tmp/drupalbaseplus.make #{node['drupalbaseplus']['site_dir']} --yes
+      drush make #{Chef::Config[:file_cache_path]}/drupalbaseplus.make #{node['drupalbaseplus']['site_dir']} --yes
     fi
   EOH
 end
@@ -122,7 +132,7 @@ bash 'site-install-with-drush-make' do
       export PATH=#{node['drupalbaseplus']['drush_base_dir']}:$PATH
       cd #{node['drupalbaseplus']['site_dir']}
       drush site-install standard \
-      --db-url=mysqli://#{node['drupalbaseplus']['database_site_user']}:#{['drupalbaseplus']['database_site_password']}@#{node['drupalbaseplus']['database_host']}/#{node['drupalbaseplus']['database_name']} \
+      --db-url=mysqli://#{node['drupalbaseplus']['database_site_user']}:#{node['drupalbaseplus']['database_site_password']}@#{node['drupalbaseplus']['database_host']}/#{node['drupalbaseplus']['database_name']} \
       --site-name=#{node['drupalbaseplus']['site_formal_name']} --locale=#{node['drupalbaseplus']['site_default_locale']} \
       --account-name=#{node['drupalbaseplus']['site_admin_account']} \
       --account-pass=#{node['drupalbaseplus']['site_admin_password']} \
@@ -161,7 +171,7 @@ include_recipe "apache2::mod_rewrite"
 web_app node['drupalbaseplus']['site_vhost_name'] do
   server_name node['drupalbaseplus']['site_url']
   docroot node['drupalbaseplus']['site_dir']
-  template "drupalbaseplus_vhost.conf.erb"
+  template "site.vhost.conf.erb"
   log_dir node['apache']['log_dir']
 end
 

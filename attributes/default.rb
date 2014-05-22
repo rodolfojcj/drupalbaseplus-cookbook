@@ -27,7 +27,7 @@ default['drupalbaseplus']['site_default_locale'] = 'es'
 default['drupalbaseplus']['site_default_country'] = 'VE'
 default['drupalbaseplus']['site_admin_account'] = 'AcmeAdmin'
 default['drupalbaseplus']['site_admin_password'] = '3t3sN4tG52ss1bl2'
-default['drupalbaseplus']['site_admin_mail'] = 'acmeadmin@put_your_acme_domain_here.com'
+default['drupalbaseplus']['site_admin_mail'] = 'acmeadmin@acmedomain.com'
 default['drupalbaseplus']['www_system_user'] = 'www-data'
 default['drupalbaseplus']['www_system_group'] = node['drupalbaseplus']['www_system_user']
 #
@@ -36,12 +36,29 @@ default['drupalbaseplus']['composer_path'] = '/usr/local/bin/composer'
 default['drupalbaseplus']['setup_site_database'] = true
 default['drupalbaseplus']['database_host'] = 'localhost'
 default['drupalbaseplus']['database_port'] = 3306
-default['drupalbaseplus']['database_name'] = 'drupalbaseplus-db'
+default['drupalbaseplus']['database_name'] = 'drupalbaseplusdb'
 default['drupalbaseplus']['database_site_user'] = 'dbsiteuser'
 default['drupalbaseplus']['database_site_password'] = 'V2ryD3ff3c5lt'
 #
 default['drupalbaseplus']['theme_default'] = 'bartik'
 default['drupalbaseplus']['cache-clear'] = 'all'
+#
+default['drupalbaseplus']['jsons_for_drush_make'] = [
+<<-EOH
+{
+  "projects": {
+    "views": {},
+    "ctools": {},
+    "drupaleasy_slideshow": {"type": "module", "download": {"type": "git", "url": "http://git.drupal.org/sandbox/ultimike/1822938.git"}}
+  },
+  "libraries": {
+    "galleria": {"type": "library", "download": {"type": "file", "url": "http://galleria.io/static/galleria-1.3.5.zip", "directory_name": "galleria"}},
+    "jquery_cycle": {"type": "library"}
+  },
+  "translations": "es"
+}
+EOH
+]
 #
 # TODO: use devel attribute to include several useful devel modules
 # TODO: use devel attribute to disable js,css compression/optimization
