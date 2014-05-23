@@ -19,6 +19,9 @@
 # limitations under the License.
 #
 
+# TODO
+# - alter database content to allow <img> tags in filtered/full html contents
+
 chef_gem 'json'
 chef_gem 'deep_merge'
 
@@ -99,6 +102,7 @@ drush_cmd "site-install" do
     ]
   drupal_root node['drupalbaseplus']['site_dir']
   drupal_uri node['drupalbaseplus']['site_url']
+  # maybe change File.exists by drupal_installed? provided by chef drush cookbook
   only_if {
     !File.exists?(node['drupalbaseplus']['site_dir'] + "/sites/default/settings.php") ||
     node['drupalbaseplus']['can_reinstall'] == true

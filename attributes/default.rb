@@ -50,17 +50,51 @@ default['drupalbaseplus']['jsons_for_drush_make'] = [
   "projects": {
     "views": {},
     "ctools": {},
-    "drupaleasy_slideshow": {"type": "module", "download": {"type": "git", "url": "http://git.drupal.org/sandbox/ultimike/1822938.git"}}
+    "galleria": {},
+    "libraries": {},
+    "flexslider": {},
+    "flexslider_views_slideshow": {},
+    "link": {},
+    "entity": {},
+    "features": {},
+    "strongarm": {},
+    "draggableviews": {},
+    "views_slideshow": {},
+    "field_redirection": {},
+    "drupaleasy_slideshow": {
+      "type": "module",
+      "download": {
+        "type": "git",
+        "url": "http://git.drupal.org/sandbox/ultimike/1822938.git"
+      }
+    },
+    "xmlsitemap": {},
+    "site_map": {},
+    "jquery_update": {},
+    "advanced_help": {}
   },
   "libraries": {
-    "galleria": {"type": "library", "download": {"type": "file", "url": "http://galleria.io/static/galleria-1.3.5.zip", "directory_name": "galleria"}},
-    "jquery_cycle": {"type": "library"}
+    "galleria": {
+      "type": "library",
+      "download": {
+        "type": "file", "url": "http://galleria.io/static/galleria-1.3.5.zip",
+         "directory_name": "galleria"
+      }
+    },
+    "jquery_cycle": {"type": "library"},
+    "flexslider": {
+      "type": "library", 
+      "download": {
+        "type": "file", "directory_name": "flexslider",
+        "url": "http://github.com/woothemes/FlexSlider/archive/master.tar.gz"
+      }
+    }
   },
   "translations": "es"
 }
 EOH
 ]
-default['drupalbaseplus']['modules_themes_to_enable'] = ['views', 'views_ui', node['drupalbaseplus']['theme_default']]
+default['drupalbaseplus']['modules_themes_to_enable'] = ['contact', 'views', 'views_ui', node['drupalbaseplus']['theme_default']]
 # useful for other cookbooks wanting to disable some modules of this base cookbook
 default['drupalbaseplus']['modules_themes_to_disable'] = [] 
 #
