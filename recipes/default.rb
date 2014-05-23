@@ -63,38 +63,7 @@ if node['drupalbaseplus']['setup_site_database'] == true
   end
 end
 
-##
-# drush installation
-##
-bash 'getcomposer' do
-  code <<-EOH
-    if [ -f #{node['drupalbaseplus']['composer_path']} ]
-    then
-      #{node['drupalbaseplus']['composer_path']} --self-update --clean-backups
-    else
-      wget -q -O- http://getcomposer.org/installer | php
-      mv composer.phar #{node['drupalbaseplus']['composer_path']}
-    fi
-  EOH
-end
-
-bash 'getdrush' do
-  code <<-EOH
-    if [ -d #{node['drupalbaseplus']['drush_base_dir']} ]
-    then
-      #{node['drupalbaseplus']['drush_base_dir']}/drush self-update
-    else
-      wget -q http://github.com/drush-ops/drush/archive/master.tar.gz
-      tar xf master.tar.gz
-      mv drush-master #{node['drupalbaseplus']['drush_base_dir']}
-      chmod 755 #{node['drupalbaseplus']['drush_base_dir']}/drush
-      rm master.tar.gz
-    fi
-    # get drush dependencies via composer, as now it requires
-    cd #{node['drupalbaseplus']['drush_base_dir']}
-    #{node['drupalbaseplus']['composer_path']} install
-  EOH
-end
+include_recipe "drupalbaseplus::install_drush" if node['drupalbaseplus']['install_drush'] == true
 
 ##
 # put drush to work throuh drush make stuff!
@@ -111,54 +80,56 @@ template Chef::Config[:file_cache_path] + "/drupalbaseplus.make" do
   })
 end
 
-bash 'apply-drush-make' do
-  # TODO: with ruby syntax, if site_dir already exists, notify some resource
-  # that tries to converge the site via pm-enable, including downloading
-  # related dependencies.
-  # Or is that more appropriated after site installation?
-  code <<-EOH
-    if [ ! -d #{node['drupalbaseplus']['site_dir']} ]
-    then
-      export PATH=#{node['drupalbaseplus']['drush_base_dir']}:$PATH
-      drush make #{Chef::Config[:file_cache_path]}/drupalbaseplus.make #{node['drupalbaseplus']['site_dir']} --yes
-    fi
-  EOH
+drush_make node['drupalbaseplus']['site_dir'] do
+  makefile Chef::Config[:file_cache_path] + "/drupalbaseplus.make"
 end
 
-bash 'site-install-with-drush-make' do
-  code <<-EOH
-    if [ ! -f #{node['drupalbaseplus']['site_dir']}/sites/default/settings.php ]
-    then
-      export PATH=#{node['drupalbaseplus']['drush_base_dir']}:$PATH
-      cd #{node['drupalbaseplus']['site_dir']}
-      drush site-install standard \
-      --db-url=mysqli://#{node['drupalbaseplus']['database_site_user']}:#{node['drupalbaseplus']['database_site_password']}@#{node['drupalbaseplus']['database_host']}/#{node['drupalbaseplus']['database_name']} \
-      --site-name=#{node['drupalbaseplus']['site_formal_name']} --locale=#{node['drupalbaseplus']['site_default_locale']} \
-      --account-name=#{node['drupalbaseplus']['site_admin_account']} \
-      --account-pass=#{node['drupalbaseplus']['site_admin_password']} \
-      --account-mail=#{node['drupalbaseplus']['site_admin_mail']} \
-      install_configure_form.site_default_country=#{node['drupalbaseplus']['site_default_country']} \
-      --yes
-    fi
-  EOH
+drush_cmd "site-install" do
+  arguments "standard install_configure_form.site_default_country=" + node['drupalbaseplus']['site_default_country']
+  options [
+    "--account-mail=" + node['drupalbaseplus']['site_admin_mail'],
+    "--account-name=" + node['drupalbaseplus']['site_admin_account'],
+    "--account-pass=" + node['drupalbaseplus']['site_admin_password'],
+    "--site-name='" + node['drupalbaseplus']['site_formal_name'] + "'",
+    "--site-mail=" + node['drupalbaseplus']['site_admin_mail'],
+    "--locale=" + node['drupalbaseplus']['site_default_locale'],
+    "--db-url=mysqli://" + node['drupalbaseplus']['database_site_user'] + ":" + 
+      node['drupalbaseplus']['database_site_password'] + "@" + node['drupalbaseplus']['database_host'] +
+       "/" + node['drupalbaseplus']['database_name']
+    ]
+  drupal_root node['drupalbaseplus']['site_dir']
+  drupal_uri node['drupalbaseplus']['site_url']
+  only_if {
+    !File.exists?(node['drupalbaseplus']['site_dir'] + "/sites/default/settings.php") ||
+    node['drupalbaseplus']['can_reinstall'] == true
+  }
 end
 
-bash 'enable-modules-via-drush' do
-  cwd node['drupalbaseplus']['site_dir']
-  modules_to_enable = %w(views_slideshow ckeditor simplecorp galleria flexslider simplecorp)
-  code <<-EOH
-    export PATH=#{node['drupalbaseplus']['drush_base_dir']}:$PATH
-    drush pm-enable --resolve-dependencies --yes #{modules_to_enable.join(' ')}
-  EOH
+drush_cmd "pm-enable" do
+  arguments node['drupalbaseplus']['modules_themes_to_enable'].join(' ')
+  options ["--resolve-dependencies"]
+  drupal_root node['drupalbaseplus']['site_dir']
+  drupal_uri node['drupalbaseplus']['site_url']
+  only_if { node['drupalbaseplus']['modules_themes_to_enable'].join(' ').empty? == false }
 end
 
-bash 'misc-commands-via-drush' do
-  cwd node['drupalbaseplus']['site_dir']
-  code <<-EOH
-    export PATH=#{node['drupalbaseplus']['drush_base_dir']}:$PATH
-    #{"drush variable-set theme_default " + node['drupalbaseplus']['theme_default'] + " --yes" if node['drupalbaseplus']['theme_default'].size > 0}
-    #{"drush cache-clear " + node['drupalbaseplus']['cache-clear'] if node['drupalbaseplus']['cache-clear'].size > 0}
-  EOH
+drush_cmd "pm-disable" do
+  arguments node['drupalbaseplus']['modules_themes_to_disable'].join(' ')
+  drupal_root node['drupalbaseplus']['site_dir']
+  drupal_uri node['drupalbaseplus']['site_url']
+  only_if { node['drupalbaseplus']['modules_themes_to_disable'].join(' ').empty? == false }
+end
+
+drush_variable "theme_default" do
+  value node['drupalbaseplus']['theme_default']
+  drupal_root node['drupalbaseplus']['site_dir']
+  drupal_uri node['drupalbaseplus']['site_url']
+end
+
+drush_cmd "cache-clear" do
+  arguments node['drupalbaseplus']['cache_to_clear']
+  drupal_root node['drupalbaseplus']['site_dir']
+  drupal_uri node['drupalbaseplus']['site_url']
 end
 
 ##

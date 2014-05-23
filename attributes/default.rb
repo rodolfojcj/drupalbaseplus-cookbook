@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 
+default['drupalbaseplus']['install_drush'] = true
 default['drupalbaseplus']['drush_base_dir'] = '/usr/local/drush'
 default['drupalbaseplus']['core_version'] = '7.x'
 default['drupalbaseplus']['site_dir'] = '/var/www/drupalbaseplus'
@@ -41,7 +42,7 @@ default['drupalbaseplus']['database_site_user'] = 'dbsiteuser'
 default['drupalbaseplus']['database_site_password'] = 'V2ryD3ff3c5lt'
 #
 default['drupalbaseplus']['theme_default'] = 'bartik'
-default['drupalbaseplus']['cache-clear'] = 'all'
+default['drupalbaseplus']['cache_to_clear'] = 'all'
 #
 default['drupalbaseplus']['jsons_for_drush_make'] = [
 <<-EOH
@@ -59,6 +60,9 @@ default['drupalbaseplus']['jsons_for_drush_make'] = [
 }
 EOH
 ]
+default['drupalbaseplus']['modules_themes_to_enable'] = ['views', 'views_ui', node['drupalbaseplus']['theme_default']]
+# useful for other cookbooks wanting to disable some modules of this base cookbook
+default['drupalbaseplus']['modules_themes_to_disable'] = [] 
 #
 # TODO: use devel attribute to include several useful devel modules
 # TODO: use devel attribute to disable js,css compression/optimization
@@ -66,3 +70,4 @@ default['drupalbaseplus']['is_devel_site'] = false
 #
 # TODO: use production attribute to optimize as much as possible
 default['drupalbaseplus']['is_production_site'] = true
+default['drupalbaseplus']['can_reinstall'] = false
