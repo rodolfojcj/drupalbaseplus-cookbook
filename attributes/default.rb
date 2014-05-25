@@ -18,11 +18,11 @@
 #
 
 default['drupalbaseplus']['install_drush'] = true
-default['drupalbaseplus']['drush_base_dir'] = '/usr/local/drush'
 default['drupalbaseplus']['core_version'] = '7.x'
-default['drupalbaseplus']['site_dir'] = '/var/www/drupalbaseplus'
-default['drupalbaseplus']['site_vhost_name'] = 'drupalbaseplus'
-default['drupalbaseplus']['site_url'] = 'www.put_your_acme_domain_here.com'
+default['drupalbaseplus']['site_short_nick'] = 'drupalbaseplus'
+default['drupalbaseplus']['site_dir'] = '/var/www/' + node['drupalbaseplus']['site_short_nick']
+default['drupalbaseplus']['site_vhost_name'] = node['drupalbaseplus']['site_short_nick']
+default['drupalbaseplus']['site_url'] = 'www.put_your_domain_here.com'
 default['drupalbaseplus']['site_formal_name'] = 'ACME Company Ltd.'
 default['drupalbaseplus']['site_default_locale'] = 'es'
 default['drupalbaseplus']['site_default_country'] = 'VE'
@@ -31,8 +31,6 @@ default['drupalbaseplus']['site_admin_password'] = '3t3sN4tG52ss1bl2'
 default['drupalbaseplus']['site_admin_mail'] = 'acmeadmin@acmedomain.com'
 default['drupalbaseplus']['www_system_user'] = 'www-data'
 default['drupalbaseplus']['www_system_group'] = node['drupalbaseplus']['www_system_user']
-#
-default['drupalbaseplus']['composer_path'] = '/usr/local/bin/composer'
 #
 default['drupalbaseplus']['setup_site_database'] = true
 default['drupalbaseplus']['database_host'] = 'localhost'
