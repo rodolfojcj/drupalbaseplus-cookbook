@@ -106,6 +106,9 @@ drush_cmd "site-install" do
     !File.exists?(node['drupalbaseplus']['site_dir'] + "/sites/default/settings.php") ||
     node['drupalbaseplus']['can_reinstall'] == true
   }
+  # TODO: think about possibly updating code and db via drush pm-update
+  # It could be useful, when not installing, to update some/all modules,
+  # themes or/and libraries
 end
 
 drush_cmd "pm-enable" do
