@@ -15,7 +15,6 @@ The following packages are installed by this cookbook:
 
 - `php-gd` - required by Drupal
 - `php-cli` - needed by Drush
-- `composer` - needed by Drush
 - `unzip` - needed by Drush when downloading some zipped libraries or projects
 - `git` - needed by Drush when downloading some libraries or projects managed with Git
 - `mysql` - Drupal needs a database or a way to connect to a database
@@ -35,8 +34,9 @@ Attributes
 ----------
 Several defaults are assumed for the following attributes:
 
-* `default['drupalbaseplus']['drush_base_dir']` - base directory to install drush
+* `default['drupalbaseplus']['install_drush']` - base directory to install drush
 * `default['drupalbaseplus']['core_version']` - Drupal core version to use, defaults to '7.x'
+* `default['drupalbaseplus']['site_short_nick']` = a quick, short and easy name to refer to this web site
 * `default['drupalbaseplus']['site_dir']` - base directory to site installation
 * `default['drupalbaseplus']['site_vhost_name']` - name used to generate the web server virtual host file for the site
 * `default['drupalbaseplus']['site_url']` - url of the site, used as the server name of the web server virtual host
@@ -48,7 +48,6 @@ Several defaults are assumed for the following attributes:
 * `default['drupalbaseplus']['site_admin_mail']` - admin user e-mail address to use on site installation via drush
 * `default['drupalbaseplus']['www_system_user']` - system user running the web server
 * `default['drupalbaseplus']['www_system_group']` - system group running the web server
-* `default['drupalbaseplus']['composer_path']` - path to composer executable
 * `default['drupalbaseplus']['setup_site_database']` - do we need to create the database? Default is true
 * `default['drupalbaseplus']['database_host']` - database server address
 * `default['drupalbaseplus']['database_port']` - database server port
@@ -57,6 +56,10 @@ Several defaults are assumed for the following attributes:
 * `default['drupalbaseplus']['database_site_password']` - database user password to configure the web site with
 * `default['drupalbaseplus']['theme_default']` - Drupal theme to set as the default one
 * `default['drupalbaseplus']['cache-clear']` - Drupal type of cache to clear via Drush, default to 'all'
+* `default['drupalbaseplus']['jsons_for_drush_make']` - array of JSON strings containing projects, libraries and translations to build the drush make file. First position is for the parent or base site and each of the following positions correspond directly to each site deeper in the hierachy; normally only the parent and one child site will be used
+* `default['drupalbaseplus']['modules_themes_to_enable']` - array of modules and themes to enable via `drush pm-enable` command
+* `default['drupalbaseplus']['modules_themes_to_disable']` - array of modules and themes to disable via `drush pm-disable` command; useful when child site wants to disable some modules already disable by its parent site
+* `default['drupalbaseplus']['can_reinstall']` - boolean attribute to allow (or not) the reinstallation of the web site. It is a safeguard to avoid losing, specially by mistake in a production environment, an already installed website. It is `false` by default
 
 Usage
 -----
