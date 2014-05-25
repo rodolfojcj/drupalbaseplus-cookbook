@@ -69,12 +69,13 @@ include_recipe "drupalbaseplus::install_drush" if node['drupalbaseplus']['instal
 ##
 # put drush to work throuh drush make stuff!
 ##
-template Chef::Config[:file_cache_path] + "/drupalbaseplus.make" do
+makefile_name = Chef::Config[:file_cache_path] + "/" + node['drupalbaseplus']['site_short_nick'] + ".make"
+template makefile_name do
   source 'site.make.erb'
   owner 'root'
   group 'root'
   mode '0644'
-  plt_array = generate_plt(merge_json_to_hash(node['drupalbaseplus']['jsons_for_drush_make'][0], nil))
+  plt_array = generate_plt(merge_json_to_hash(node['drupalbaseplus']['jsons_for_drush_make']))
   variables({
     :core => node['drupalbaseplus']['core_version'],
     :plt => plt_array
@@ -82,7 +83,7 @@ template Chef::Config[:file_cache_path] + "/drupalbaseplus.make" do
 end
 
 drush_make node['drupalbaseplus']['site_dir'] do
-  makefile Chef::Config[:file_cache_path] + "/drupalbaseplus.make"
+  makefile makefile_name
 end
 
 drush_cmd "site-install" do

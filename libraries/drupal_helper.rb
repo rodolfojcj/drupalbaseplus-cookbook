@@ -51,20 +51,30 @@ module Drupal
       answer
     end
 
-    ## merge two or more strings containing json formatted data of projects (including themes), libraries and translations
-    #def merge_json_to_hash(parent_json, first_json_child, nth_json_childs*)
-    #end
-
-    ## merge two strings containin json formatted data of projects (including themes), libraries and translations
-    def merge_json_to_hash(parent_json, child_json)
-      return one_json_to_hash(parent_json) if child_json == nil
-      parent_hash = JSON.parse(parent_json)
-      child_hash = JSON.parse(child_json)
-      child_hash.deep_merge(parent_hash)
-    end
-
-    def one_json_to_hash(json)
-      hash = JSON.parse(json)
+    # merge two strings containin json formatted data of projects
+    # (including themes), libraries and translations
+    def merge_json_to_hash(array_of_jsons)
+      merged_hash = {} # merged_hash its the "parent" element
+      # type of array_of_jsons is Chef::Node::ImmutableArray
+      if array_of_jsons.is_a?(Array) && array_of_jsons.size > 0
+        return JSON.parse(array_of_jsons.first) if array_of_jsons.size == 1
+        merged_hash = JSON.parse(array_of_jsons.first)
+        # potentially an arbitrary number of childs could be used
+        # but normally one child and one parent will be present
+        array_of_jsons[1 .. array_of_jsons.size].each { |it|
+          next_child = JSON.parse(it)
+          merged_hash = next_child.deep_merge(merged_hash)
+        }
+      end
+      # possibly, the child may exclude some project or library
+      # included by the parent
+      # TODO: how could the child exclude all kinds of parent's translations ?
+      ["projects", "libraries"].each do |it|
+        merged_hash[it].delete_if { |k,v|
+          v.class == Hash && v.has_key?("enabled") && v['enabled'] == "false"
+        }
+      end
+      return merged_hash
     end
  end
 end
