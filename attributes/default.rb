@@ -69,7 +69,8 @@ default['drupalbaseplus']['jsons_for_drush_make'] = [
     "xmlsitemap": {},
     "site_map": {},
     "jquery_update": {},
-    "advanced_help": {}
+    "advanced_help": {},
+    "locationmap": {}
   },
   "libraries": {
     "galleria": {
@@ -92,7 +93,7 @@ default['drupalbaseplus']['jsons_for_drush_make'] = [
 }
 EOH
 ]
-default['drupalbaseplus']['modules_themes_to_enable'] = ['contact', 'views', 'views_ui']
+default['drupalbaseplus']['modules_themes_to_enable'] = ['contact', 'views', 'views_ui', "jquery_update"]
 # useful for other cookbooks wanting to disable some modules of this base cookbook
 default['drupalbaseplus']['modules_themes_to_disable'] = [] 
 #
