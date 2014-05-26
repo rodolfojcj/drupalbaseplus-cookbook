@@ -92,7 +92,7 @@ default['drupalbaseplus']['jsons_for_drush_make'] = [
 }
 EOH
 ]
-default['drupalbaseplus']['modules_themes_to_enable'] = ['contact', 'views', 'views_ui', node['drupalbaseplus']['theme_default']]
+default['drupalbaseplus']['modules_themes_to_enable'] = ['contact', 'views', 'views_ui']
 # useful for other cookbooks wanting to disable some modules of this base cookbook
 default['drupalbaseplus']['modules_themes_to_disable'] = [] 
 #
