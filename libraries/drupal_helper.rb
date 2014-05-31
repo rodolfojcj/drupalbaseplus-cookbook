@@ -51,7 +51,7 @@ module Drupal
       answer
     end
 
-    # merge two strings containin json formatted data of projects
+    # merge two strings containing json formatted data of projects
     # (including themes), libraries and translations
     def merge_json_to_hash(array_of_jsons)
       merged_hash = {} # merged_hash its the "parent" element
