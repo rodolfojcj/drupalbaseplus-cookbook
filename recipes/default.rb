@@ -20,9 +20,6 @@
 # TODO
 # - alter database content to allow <img> tags in filtered/full html contents
 
-chef_gem 'json'
-chef_gem 'deep_merge'
-
 ::Chef::Resource::Template.send(:include, Drupal::Helper)
 
 ##
