@@ -70,7 +70,7 @@ default['drupalbaseplus']['jsons_for_drush_make'] = [
     "site_map": {},
     "jquery_update": {},
     "advanced_help": {},
-    "locationmap",
+    "locationmap": {},
     "piwik": {}
   },
   "libraries": {
