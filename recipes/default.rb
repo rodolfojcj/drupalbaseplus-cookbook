@@ -33,6 +33,8 @@ package 'git'
 package 'php5-mysql'
 package 'php5-gd'
 package 'apache2'
+#
+package 'gzip'
 
 ##
 # setup database, if needed
@@ -156,4 +158,32 @@ directory node['drupalbaseplus']['site_dir'] + '/sites/default/files' do
   owner node['drupalbaseplus']['www_system_user']
   group node['drupalbaseplus']['www_system_group']
   mode '0755'
+end
+
+##
+# additonal languages for tinymce
+##
+# url example to download tinymce langs "es", "it" and "ru"
+# http://www.tinymce.com/i18n/download.php?download[]=es&download[]=it&download[]=ru
+# adding the follwing code to node['drupalbaseplus']['jsons_for_drush_make'] was tried,
+# but it failed because drush deletes needed langs/en.js file :(
+#    "tinymce_langs": {
+#      "type": "library",
+#      "directory_name": "langs",
+#      "destination": "libraries/tinymce/jscripts/tiny_mce",
+#      "download": {
+#        "type": "file",
+#        "url": "http://www.tinymce.com/i18n/download.php?&download[]=es"
+#      }
+#    }
+bash 'add_tinymce_langs' do
+  langs_dir = node['drupalbaseplus']['site_dir'] + '/sites/all/libraries/tinymce/jscripts/tiny_mce/langs'
+  bash_commands = ''
+  node['drupalbaseplus']['tinymce_langs'].each do |lang|
+    bash_commands << <<-EOH
+      wget --quiet -O - "http://www.tinymce.com/i18n/download.php?&download[]=#{lang}" | gunzip > #{langs_dir}/#{lang}.js
+    EOH
+  end
+  code bash_commands
+  only_if {File.exists?(langs_dir) && !node['drupalbaseplus']['tinymce_langs'].empty?}
 end

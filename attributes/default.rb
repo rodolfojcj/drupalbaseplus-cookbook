@@ -71,7 +71,8 @@ default['drupalbaseplus']['jsons_for_drush_make'] = [
     "jquery_update": {},
     "advanced_help": {},
     "locationmap": {},
-    "piwik": {}
+    "piwik": {},
+    "wysiwyg": {}
   },
   "libraries": {
     "galleria": {
@@ -83,10 +84,17 @@ default['drupalbaseplus']['jsons_for_drush_make'] = [
     },
     "jquery_cycle": {"type": "library"},
     "flexslider": {
-      "type": "library", 
+      "type": "library",
       "download": {
         "type": "file", "directory_name": "flexslider",
         "url": "http://github.com/woothemes/FlexSlider/archive/master.tar.gz"
+      }
+    },
+    "tinymce": {
+      "type": "library",
+      "download": {
+        "type": "file", "directory_name": "tinymce",
+        "url": "http://download.moxiecode.com/tinymce/tinymce_3.5.11.zip"
       }
     }
   },
@@ -94,7 +102,9 @@ default['drupalbaseplus']['jsons_for_drush_make'] = [
 }
 EOH
 ]
-default['drupalbaseplus']['modules_themes_to_enable'] = ['contact', 'views', 'views_ui', 'jquery_update', 'piwik']
+default['drupalbaseplus']['tinymce_langs'] = ['es']
+default['drupalbaseplus']['modules_themes_to_enable'] = ['contact', 'views',
+  'views_ui', 'jquery_update', 'piwik', 'wysiwyg']
 # useful for other cookbooks wanting to disable some modules of this base cookbook
 default['drupalbaseplus']['modules_themes_to_disable'] = [] 
 #
