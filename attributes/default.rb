@@ -111,7 +111,7 @@ default['drupalbaseplus']['modules_themes_to_disable'] = []
 # TODO: use devel attribute to include several useful devel modules
 # TODO: use devel attribute to disable js,css compression/optimization
 default['drupalbaseplus']['is_devel_site'] = false
-#
 # TODO: use production attribute to optimize as much as possible
 default['drupalbaseplus']['is_production_site'] = true
+#
 default['drupalbaseplus']['can_reinstall'] = false

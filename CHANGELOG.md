@@ -1,6 +1,10 @@
 drupalbaseplus CHANGELOG
 ========================
 
+0.1.3
+-----
+- Minor changes in metadata and documentation
+
 0.1.2
 -----
 - Fix in syntax

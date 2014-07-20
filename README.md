@@ -26,9 +26,18 @@ This cookbook works on the following platforms:
 
 - Ubuntu 12.04
 
+Maybe it could work with another Ubuntu versions, as well as with Debian.
+
 Testing
 -------
+
 Only manual testing. Automated testing is a pending assignment.
+
+Recipes
+-------
+
+- `drupalbaseplus::default` - it is the workhorse of this cookbook
+- `drupalbaseplus::install_drush` - installs [Drush](https://github.com/drush-ops/drush) via PEAR
 
 Attributes
 ----------
@@ -55,10 +64,13 @@ Several defaults are assumed for the following attributes:
 * `default['drupalbaseplus']['database_site_user']` - database user name to configure the web site with
 * `default['drupalbaseplus']['database_site_password']` - database user password to configure the web site with
 * `default['drupalbaseplus']['theme_default']` - Drupal theme to set as the default one
-* `default['drupalbaseplus']['cache-clear']` - Drupal type of cache to clear via Drush, default to 'all'
-* `default['drupalbaseplus']['jsons_for_drush_make']` - array of JSON strings containing projects, libraries and translations to build the drush make file. First position is for the parent or base site and each of the following positions correspond directly to each site deeper in the hierachy; normally only the parent and one child site will be used
+* `default['drupalbaseplus']['cache_to_clear']` - Drupal type of cache to clear via Drush, default to 'all'
+* `default['drupalbaseplus']['jsons_for_drush_make']` - array of JSON strings containing projects, libraries and translations to build the drush make file. First position in the array is for the parent or base site and each of the following positions correspond directly to each site deeper in the hierachy; normally only the parent and one child site will be used
+* `default['drupalbaseplus']['tinymce_langs']` - required language files to download for Tiny MCE wysiwyg editor
 * `default['drupalbaseplus']['modules_themes_to_enable']` - array of modules and themes to enable via `drush pm-enable` command
 * `default['drupalbaseplus']['modules_themes_to_disable']` - array of modules and themes to disable via `drush pm-disable` command; useful when child site wants to disable some modules already disable by its parent site
+* `default['drupalbaseplus']['is_devel_site']` - unused
+* `default['drupalbaseplus']['is_production_site']` - unused
 * `default['drupalbaseplus']['can_reinstall']` - boolean attribute to allow (or not) the reinstallation of the web site. It is a safeguard to avoid losing, specially by mistake in a production environment, an already installed website. It is `false` by default
 
 Usage
@@ -76,15 +88,44 @@ Just include `drupalbaseplus` in your node's `run_list`:
 }
 ```
 
-Also, it is valid to include it in your cookbook's recipes as `include_recipe "drupalbaseplus" or `include_recipe "drupalbaseplus::default"`.
+Also you could create a wrapper cookbook for a custom web site, customizing some attributes and then including the `drupalbaseplus` recipe. For example:
+
+```
+node.default['drupalbaseplus']['site_url'] = 'www.my-custom-website.com'
+node.default['drupalbaseplus']['site_short_nick'] = 'my-site'
+node.default['drupalbaseplus']['site_dir'] = '/var/www/my-site'
+node.default['drupalbaseplus']['database_name'] = 'mysitedb'
+node.default['drupalbaseplus']['database_site_user'] = 'mysiteuser'
+node.default['drupalbaseplus']['database_site_password'] = '-PGm2CV+nZYa6_'
+node.default['drupalbaseplus']['jsons_for_drush_make'] <<
+<<-EOH
+{
+  "projects": {
+    "simplecorp": {},
+    "foundation7": {
+      "type": "theme",
+      "download": {
+        "type": "git",
+        "url": "git://github.com/drewkennelly/foundation7.git"
+      }
+    }
+  }
+}
+EOH
+node.default['drupalbaseplus']['modules_themes_to_enable'] << "foundation7"
+node.default['drupalbaseplus']['theme_default'] = 'foundation7'
+include_recipe "drupalbaseplus"
+```
 
 Contributing
 ------------
-This is a work in progress. Write me an e-mail with your ideas or contributions
+
+Use it, fork it and every correction, suggestion and improvement will be well received.
 
 License and Authors
 -------------------
-Author:: Rodolfo Castellanos: <rodolfojcj@yahoo.com>
+
+Author:: Rodolfo Castellanos: <rodolfojcj at yahoo.com>
 
 ```
 Copyright:: 2014, OpenSinergia
