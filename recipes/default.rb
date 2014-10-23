@@ -41,7 +41,6 @@ package 'gzip'
 ##
 if node['drupalbaseplus']['setup_site_database'] == true
   include_recipe "mysql::server"
-  include_recipe "mysql::ruby"
   include_recipe "database"
 
   mysql_connection_info = {
