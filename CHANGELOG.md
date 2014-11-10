@@ -1,6 +1,10 @@
 drupalbaseplus CHANGELOG
 ========================
 
+0.1.5
+-----
+- Fix to allow clean urls with differents versions of Apache
+
 0.1.4
 -----
 - Fix in the way of using mysql cookbook version 5.5.3
