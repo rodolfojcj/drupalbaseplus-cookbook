@@ -9,8 +9,12 @@
   <Directory />
     Options Indexes FollowSymLinks
     AllowOverride All
+<% if node['apache']['version'] == '2.4' -%>
+    Require all granted
+<% else -%>
     Order allow,deny
-    allow from all
+    Allow from all
+<% end -%>
   </Directory>
 
   # disallow dangerous files
