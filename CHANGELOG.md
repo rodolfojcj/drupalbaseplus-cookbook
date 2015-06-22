@@ -1,6 +1,15 @@
 drupalbaseplus CHANGELOG
 ========================
 
+0.1.7
+-----
+- Added integration of IMCE with Wysiwyg modules to ease the integration with
+TinyMCE in order to allow uploading images when editing content in Drupal
+
+0.1.6
+-----
+- Fix in virtual host configuration for Apache 2.4 (or older versions too)
+
 0.1.5
 -----
 - Fix to allow clean urls with differents versions of Apache

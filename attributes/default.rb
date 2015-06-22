@@ -42,6 +42,7 @@ default['drupalbaseplus']['database_site_password'] = 'V2ryD3ff3c5lt'
 default['drupalbaseplus']['theme_default'] = 'bartik'
 default['drupalbaseplus']['cache_to_clear'] = 'all'
 #
+# imce + imce_wysiwyg + wysiwyg + tinymce 3.5 = uploading images in TinyMCE
 default['drupalbaseplus']['jsons_for_drush_make'] = [
 <<-EOH
 {
@@ -72,7 +73,9 @@ default['drupalbaseplus']['jsons_for_drush_make'] = [
     "advanced_help": {},
     "locationmap": {},
     "piwik": {},
-    "wysiwyg": {}
+    "wysiwyg": {},
+    "imce": {},
+    "imce_wysiwyg": {}
   },
   "libraries": {
     "galleria": {
